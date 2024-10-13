@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="blackLight">#3B3B3B</color>
+    <color name="blackLightTransparent">#003B3B3B</color>
+
+    /* Circle Colors */
+    <color name="RedPink">#E9B0B0</color>
+    <color name="BabyBlue">#81C1C1</color>
+    <color name="Yellow">#F2FA9D</color>
+    <color name="Green">#91F48F</color>
+
+
+    <color  name="activityBackground">#252525</color>
+    <color name= "buttonBackground">@color/blackLight</color>
+    <color name="hintColor">@color/blackLight</color>
+</resources>

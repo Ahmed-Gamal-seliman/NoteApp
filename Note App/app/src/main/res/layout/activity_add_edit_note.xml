@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/activityBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".feature_note.presentation.add_edit_note.components.AddEditNoteActivity"
+
+    android:padding="25dp"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/note_colors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        >
+        <ImageButton
+            android:id="@+id/redPink_Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/circle"
+            android:backgroundTint="@color/blackLightTransparent"
+           />
+
+        <ImageButton
+            android:id="@+id/babyBlue_Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blackLightTransparent"
+            android:src="@drawable/circle"
+            />
+
+        <ImageButton
+            android:id="@+id/yellow_Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blackLightTransparent"
+            android:src="@drawable/circle"
+            />
+
+        <ImageButton
+            android:id="@+id/green_Circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blackLightTransparent"
+            android:src="@drawable/circle"
+            />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonBackground"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@id/note_colors"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/note_colors" />
+
+
+    <ImageButton
+        android:id="@+id/save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonBackground"
+        android:src="@drawable/ic_save"
+
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@id/note_colors"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/note_colors" />
+
+    <EditText
+        android:id="@+id/Title_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:textColorHint="@color/hintColor"
+        android:textSize="40sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/note_colors"
+        android:backgroundTint="@color/blackLightTransparent"
+        android:layout_marginTop="15dp"
+        />
+
+    <EditText
+        android:id="@+id/note_body_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type something..."
+        android:textColorHint="@color/hintColor"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/Title_et"
+        android:backgroundTint="@color/blackLightTransparent"
+        android:layout_marginTop="15dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
