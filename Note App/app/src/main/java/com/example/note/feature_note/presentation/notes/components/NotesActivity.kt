@@ -1,21 +1,125 @@
 package com.example.note.feature_note.presentation.notes.components
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.note.R
+import com.example.note.databinding.ActivityNotesBinding
+import com.example.note.feature_note.data.model.Note
+import com.example.note.feature_note.presentation.Constants
+import com.example.note.feature_note.presentation.NoteAdapter
+import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteActivity
+import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class NotesActivity : AppCompatActivity() {
 
+    lateinit var binding:ActivityNotesBinding
+    private lateinit var viewModel: NotesViewModel
+
+    private val activityLauncher: ActivityResultLauncher<Intent> =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult(),
+                ActivityResultCallback {result->
+
+                    val intent = result.data
+                    val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
+                runBlocking {
+                    viewModel.noteMainList= viewModel.getNotes()?.first()
+
+                    if(note!=null)
+                        viewModel.noteAdapter.addNote(note)
+                }
+
+                        if (viewModel.noteMainList?.isNotEmpty()!!) {
+                            Log.e("here not empty", viewModel.noteMainList!!.size.toString())
+                            binding.homeNoteImg.isVisible = false
+                            binding.userWelcomeTextView.isVisible = false
+                            binding.rvNotes.isVisible = true
+                        } else {
+                            Log.e("here", viewModel.noteMainList!!.size.toString())
+                            binding.rvNotes.isVisible = false
+                            binding.homeNoteImg.isVisible = true
+                            binding.userWelcomeTextView.isVisible = true
+                        }
+
+
+
+
+                }
+            )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_notes)
+        binding = ActivityNotesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        initViewModel()
+        intiNotesRecyclerView()
+        checkIfNotesIsEmpty()
+        onClickFloatingActionButton()
+        onClickDeleteIcon()
 
 
 
+
+
+    }
+
+    private fun onClickDeleteIcon() {
+        viewModel.noteAdapter.onClickIconDelete= object :NoteAdapter.IconDeleteListener{
+            override fun onIconDeleteClicked(note:Note,position:Int) {
+                /* Remove from Note List and from Room Database*/
+                    viewModel.noteAdapter.deleteNote(note, position)
+                    viewModel.deleteNote(note)
+                   }
+        }
+
+
+    }
+
+    private fun checkIfNotesIsEmpty() {
+        /* Check there is a list or not */
+        if (viewModel.noteMainList?.isNotEmpty()!!) {
+            binding.homeNoteImg.isVisible = false
+            binding.userWelcomeTextView.isVisible = false
+            binding.rvNotes.isVisible = true
+        } else {
+            binding.rvNotes.isVisible = false
+            binding.homeNoteImg.isVisible = true
+            binding.userWelcomeTextView.isVisible = true
+        }
+    }
+
+    private fun intiNotesRecyclerView() {
+        binding.rvNotes.adapter = viewModel.noteAdapter
+        binding.rvNotes.layoutManager= LinearLayoutManager(this)
+    }
+
+    private fun initViewModel() {
+        viewModel = NotesViewModel(this.application)
+    }
+
+    private fun onClickFloatingActionButton() {
+        binding.fabAdd.setOnClickListener {
+           val intent:Intent= Intent(this@NotesActivity,AddEditNoteActivity::class.java)
+            activityLauncher.launch(intent)
+        }
     }
 }

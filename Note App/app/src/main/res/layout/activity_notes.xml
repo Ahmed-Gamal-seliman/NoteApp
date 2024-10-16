@@ -43,15 +43,19 @@
 
     <ImageView
         android:id="@+id/home_note_img"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/home_note"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UserName_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/UserName_tv"
+        app:layout_constraintVertical_bias="0.498" />
 
     <TextView
+        android:id="@+id/user_welcome_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello UserName!\nCreate your first note !"
@@ -71,6 +75,18 @@
         android:layout_marginHorizontal="25dp"
         android:layout_marginVertical="25dp"
         app:rippleColor="@color/white"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_Notes"
+        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/UserName_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fab_add"
+        android:layout_marginTop="15dp"
         />
 
 

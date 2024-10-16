@@ -15,5 +15,5 @@
 
     <color  name="activityBackground">#252525</color>
     <color name= "buttonBackground">@color/blackLight</color>
-    <color name="hintColor">@color/blackLight</color>
+    <color name="hintColor">#D3BA9D9D</color>
 </resources>
