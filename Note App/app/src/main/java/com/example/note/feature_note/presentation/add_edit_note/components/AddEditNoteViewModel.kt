@@ -18,7 +18,7 @@ class AddEditNoteViewModel(application:Application):ViewModel() {
 
      fun addNote(note: Note){
         viewModelScope.launch(Dispatchers.IO) {
-            noteUseCase.noteRepository.insertNote(note)
+            noteUseCase.addNote(note)
         }
     }
 

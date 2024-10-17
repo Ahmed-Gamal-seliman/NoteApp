@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.note.feature_note.data.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -23,5 +24,11 @@ interface NoteDao {
 
     @Delete
     suspend fun deleteNote(note: Note)
+
+    @Query("SELECT * FROM Note WHERE title = :title AND content = :content AND color = :color")
+    suspend fun getNote(title:String,content:String,color:Int):Note?
+
+    @Update
+    suspend fun updateNote(note:Note)
 
 }

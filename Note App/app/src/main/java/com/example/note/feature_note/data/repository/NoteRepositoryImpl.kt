@@ -28,6 +28,14 @@ class NoteRepositoryImpl(
     }
 
     override suspend fun deleteNote(note: Note) {
-        dao?.deleteNote(note)
+         dao?.deleteNote(note)
+    }
+
+    override suspend fun getNote(title: String, content: String, color: Int):Note? {
+        return dao?.getNote(title,content,color)
+    }
+
+    override suspend fun updateNote(note: Note) {
+        dao?.updateNote(note)
     }
 }

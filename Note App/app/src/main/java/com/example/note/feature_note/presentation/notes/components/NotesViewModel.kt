@@ -1,6 +1,7 @@
 package com.example.note.feature_note.presentation.notes.components
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.note.feature_note.data.model.Note
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class NotesViewModel(application:Application) :ViewModel() {
 
@@ -21,30 +23,46 @@ class NotesViewModel(application:Application) :ViewModel() {
     private val noteUseCase: NoteUseCase = NoteUseCase(NoteRepositoryImpl(application))
 
      var noteAdapter:NoteAdapter
-    var noteMainList: List<Note>? = null
+    var noteMainList: MutableList<Note>? = null
 
 
     init {
         runBlocking {
-            noteMainList =getNotes()?.first()
+            noteMainList =getNotes()?.first()?.toMutableList()
             }
 
-        noteAdapter = NoteAdapter(noteMainList?.toMutableList())
+        noteAdapter = NoteAdapter(noteMainList)
     }
 
      fun getNotes(): Flow<List<Note>>? {
-         return noteUseCase.noteRepository.getNotes()
+         return noteUseCase.getNotes()
      }
 
 
-    fun deleteNote(note:Note)
+    fun deleteNote(note:Note,position:Int)
     {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            noteUseCase.noteRepository.deleteNote(note)
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
+                 noteUseCase.deleteNote(note)
+            }
+            noteAdapter.deleteNote(position)
         }
 
     }
+
+    fun getNote(title: String, content: String, color: Int):Note? {
+        var note:Note? = null
+       runBlocking {
+            note = noteUseCase.getNote(title, content, color)
+
+        }
+        return note
+
+    }
+
+
+
 
 
 }

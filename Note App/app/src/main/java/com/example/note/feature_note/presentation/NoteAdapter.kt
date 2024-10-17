@@ -14,10 +14,12 @@ import com.example.note.R
 import com.example.note.databinding.NoteItemBinding
 import com.example.note.feature_note.data.model.Note
 
-class NoteAdapter(val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(private val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
    private lateinit var binding: NoteItemBinding
 
     var onClickIconDelete:IconDeleteListener?=null
+
+     var onCardClick:CardClickListener?= null
 
 
 
@@ -28,16 +30,23 @@ class NoteAdapter(val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewH
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+
         binding.noteTitle.text= noteList?.get(position)?.title.toString()
         binding.cardItem.setBackgroundColor( ContextCompat.getColor(binding.root.context,
             noteList?.get(position)?.color ?: R.color.Green
         ))
 
+
+
+
         binding.icDelete.setOnClickListener()
         {
-            noteList?.let {
-                noteList -> onClickIconDelete?.onIconDeleteClicked(noteList[position],position)
-            }
+            onClickIconDelete?.onIconDeleteClicked(noteList?.get(holder.adapterPosition),holder.adapterPosition)
+        }
+
+        binding.root.setOnClickListener()
+        {
+            onCardClick?.onItemClicked(noteList?.get(holder.adapterPosition))
         }
     }
 
@@ -46,19 +55,23 @@ class NoteAdapter(val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewH
 
     fun addNote(note:Note){
        noteList?.add(note)
-        notifyItemInserted(noteList?.size ?: 0)
+        notifyItemInserted(noteList?.size!!)
     }
 
-    fun deleteNote(note:Note,position:Int)
+    fun deleteNote(position:Int)
     {
-        noteList?.remove(note)
-        notifyItemRemoved(position)
+        noteList?.removeAt(position)
+         notifyItemRemoved(position)
 
     }
     class NoteViewHolder(itemView: View):ViewHolder(itemView)
 
 
     interface IconDeleteListener{
-        fun onIconDeleteClicked(note:Note,position:Int):Unit
+        fun onIconDeleteClicked(note:Note?,position:Int):Unit
+    }
+
+    interface CardClickListener{
+        fun onItemClicked(note:Note?)
     }
 }

@@ -9,11 +9,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity
 data class Note(
+    @PrimaryKey(autoGenerate = true) val id:Int?=null,
     var title:String?,
     var content:String?,
-    var color:Int?,
-    @PrimaryKey
-    val id:Int?= null
+    var color:Int?
+
 ):Parcelable
 {
     companion object{

@@ -41,7 +41,7 @@ class AddEditNoteActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel= AddEditNoteViewModel(this.application)
-        viewModel.note= Note(null,null,null,null)
+        viewModel.note= Note(title=null,content=null,color=null)
 
 
         setPostColors()
@@ -51,6 +51,8 @@ class AddEditNoteActivity : AppCompatActivity() {
         onCircleColorsClicked()
 
         onBackArrowClicked()
+
+        gti
 
 
 
@@ -96,6 +98,7 @@ class AddEditNoteActivity : AppCompatActivity() {
 
     private fun onSaveButtonClicked() {
         binding.saveBtn.setOnClickListener{
+
             /* Check title and body is not empty */
 
             val titleHandle:String? = handleTextFields(binding.TitleEt.text.toString())

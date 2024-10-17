@@ -13,6 +13,10 @@ interface NoteRepository {
 
     suspend fun deleteNote(note: Note)
 
+    suspend fun getNote(title:String,content:String,color:Int):Note?
+
+    suspend fun updateNote(note:Note)
+
 
 
 }

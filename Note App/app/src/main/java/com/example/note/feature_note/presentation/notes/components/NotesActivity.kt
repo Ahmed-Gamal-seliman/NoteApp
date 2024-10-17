@@ -1,5 +1,6 @@
 package com.example.note.feature_note.presentation.notes.components
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -40,7 +41,7 @@ class NotesActivity : AppCompatActivity() {
                     val intent = result.data
                     val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
                 runBlocking {
-                    viewModel.noteMainList= viewModel.getNotes()?.first()
+                    viewModel.noteMainList= viewModel.getNotes()?.first()?.toMutableList()
 
                     if(note!=null)
                         viewModel.noteAdapter.addNote(note)
@@ -64,6 +65,29 @@ class NotesActivity : AppCompatActivity() {
                 }
             )
 
+
+    private val editActivityLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultCallback {result->
+
+                val intent = result.data
+                val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
+                runBlocking {
+                    viewModel.noteMainList= viewModel.getNotes()?.first()?.toMutableList()
+
+                    if(note!=null)
+                        viewModel.noteAdapter.addNote(note)
+                }
+
+                checkIfNotesIsEmpty()
+
+
+
+
+            }
+        )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,19 +100,43 @@ class NotesActivity : AppCompatActivity() {
         onClickFloatingActionButton()
         onClickDeleteIcon()
 
+        onCardItemClicked()
 
 
 
 
     }
 
+    private fun onCardItemClicked() {
+        viewModel.noteAdapter.onCardClick = object:NoteAdapter.CardClickListener{
+            override fun onItemClicked(note:Note?) {
+                val intent= Intent(this@NotesActivity,AddEditNoteActivity::class.java)
+                intent.putExtra(Constants.NOTE_KEY,note)
+                startActivity(intent)
+
+
+
+            }
+        }
+    }
+
     private fun onClickDeleteIcon() {
         viewModel.noteAdapter.onClickIconDelete= object :NoteAdapter.IconDeleteListener{
-            override fun onIconDeleteClicked(note:Note,position:Int) {
+
+            override fun onIconDeleteClicked(note:Note?, position:Int) {
                 /* Remove from Note List and from Room Database*/
-                    viewModel.noteAdapter.deleteNote(note, position)
-                    viewModel.deleteNote(note)
-                   }
+
+                val realnote = viewModel.getNote(title=note?.title!!, content = note.content!! ,color = note.color!!)
+
+
+
+
+                    if (realnote != null)
+                        viewModel.deleteNote(realnote, position)
+
+
+
+            }
         }
 
 
@@ -97,14 +145,22 @@ class NotesActivity : AppCompatActivity() {
     private fun checkIfNotesIsEmpty() {
         /* Check there is a list or not */
         if (viewModel.noteMainList?.isNotEmpty()!!) {
-            binding.homeNoteImg.isVisible = false
-            binding.userWelcomeTextView.isVisible = false
-            binding.rvNotes.isVisible = true
+            showNoteRecyclerView()
         } else {
-            binding.rvNotes.isVisible = false
-            binding.homeNoteImg.isVisible = true
-            binding.userWelcomeTextView.isVisible = true
+            showNoteImage()
         }
+    }
+
+    private fun showNoteImage() {
+        binding.rvNotes.isVisible = false
+        binding.homeNoteImg.isVisible = true
+        binding.userWelcomeTextView.isVisible = true
+    }
+
+    private fun showNoteRecyclerView() {
+        binding.homeNoteImg.isVisible = false
+        binding.userWelcomeTextView.isVisible = false
+        binding.rvNotes.isVisible = true
     }
 
     private fun intiNotesRecyclerView() {
