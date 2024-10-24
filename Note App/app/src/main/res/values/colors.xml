@@ -12,6 +12,10 @@
     <color name="Yellow">#F2FA9D</color>
     <color name="Green">#91F48F</color>
 
+    <color name="buttonRegisterColor">#53AAAF</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
 
     <color  name="activityBackground">#252525</color>
     <color name= "buttonBackground">@color/blackLight</color>

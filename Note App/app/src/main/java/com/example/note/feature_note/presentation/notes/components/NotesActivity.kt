@@ -47,17 +47,7 @@ class NotesActivity : AppCompatActivity() {
                         viewModel.noteAdapter.addNote(note)
                 }
 
-                        if (viewModel.noteMainList?.isNotEmpty()!!) {
-                            Log.e("here not empty", viewModel.noteMainList!!.size.toString())
-                            binding.homeNoteImg.isVisible = false
-                            binding.userWelcomeTextView.isVisible = false
-                            binding.rvNotes.isVisible = true
-                        } else {
-                            Log.e("here", viewModel.noteMainList!!.size.toString())
-                            binding.rvNotes.isVisible = false
-                            binding.homeNoteImg.isVisible = true
-                            binding.userWelcomeTextView.isVisible = true
-                        }
+                    checkIfNotesIsEmpty()
 
 
 
@@ -125,15 +115,19 @@ class NotesActivity : AppCompatActivity() {
 
             override fun onIconDeleteClicked(note:Note?, position:Int) {
                 /* Remove from Note List and from Room Database*/
-
-                val realnote = viewModel.getNote(title=note?.title!!, content = note.content!! ,color = note.color!!)
-
+              val realnote = viewModel.getNote(title=note?.title!!, content = note.content!! ,color = note.color!!)
 
 
 
-                    if (realnote != null)
+
+                    if (realnote != null) {
                         viewModel.deleteNote(realnote, position)
+                        viewModel.noteAdapter.deleteNote(position)
 
+                    }
+
+
+                checkIfNotesIsEmpty()
 
 
             }
@@ -144,10 +138,12 @@ class NotesActivity : AppCompatActivity() {
 
     private fun checkIfNotesIsEmpty() {
         /* Check there is a list or not */
-        if (viewModel.noteMainList?.isNotEmpty()!!) {
+        if (viewModel.noteAdapter.noteListIsNotEmpty()) {
             showNoteRecyclerView()
+            Log.e("show","note recycler")
         } else {
             showNoteImage()
+            Log.e("show","note image")
         }
     }
 

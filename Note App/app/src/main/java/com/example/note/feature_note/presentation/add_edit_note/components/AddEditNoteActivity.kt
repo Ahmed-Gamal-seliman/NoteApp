@@ -52,7 +52,7 @@ class AddEditNoteActivity : AppCompatActivity() {
 
         onBackArrowClicked()
 
-        gti
+
 
 
 

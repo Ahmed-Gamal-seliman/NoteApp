@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Note</string>
+    <string name="full_name">Full name</string>
+    <string name="Valid_email">Valid email</string>
+    <string name="strong_password">Strong Password</string>
+    <string name="log_in">Already a member? Log In</string>
+    <string name="register">New Member? Register now</string>
+    <string name="already_a_member">Already a member?</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="password">password</string>
+    <string name="remeber_me">Remeber me</string>
+    <string name="login">Login</string>
 </resources>

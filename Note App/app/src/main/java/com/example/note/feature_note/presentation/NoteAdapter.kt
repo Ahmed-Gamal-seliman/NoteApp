@@ -14,7 +14,7 @@ import com.example.note.R
 import com.example.note.databinding.NoteItemBinding
 import com.example.note.feature_note.data.model.Note
 
-class NoteAdapter(private val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
    private lateinit var binding: NoteItemBinding
 
     var onClickIconDelete:IconDeleteListener?=null
@@ -44,10 +44,10 @@ class NoteAdapter(private val noteList:MutableList<Note>?):Adapter<NoteAdapter.N
             onClickIconDelete?.onIconDeleteClicked(noteList?.get(holder.adapterPosition),holder.adapterPosition)
         }
 
-        binding.root.setOnClickListener()
-        {
-            onCardClick?.onItemClicked(noteList?.get(holder.adapterPosition))
-        }
+//        binding.root.setOnClickListener()
+//        {
+//            onCardClick?.onItemClicked(noteList?.get(holder.adapterPosition))
+//        }
     }
 
     override fun getItemCount():Int = noteList?.size ?: 0
@@ -60,9 +60,16 @@ class NoteAdapter(private val noteList:MutableList<Note>?):Adapter<NoteAdapter.N
 
     fun deleteNote(position:Int)
     {
+        Log.e("show delete","before delete")
         noteList?.removeAt(position)
          notifyItemRemoved(position)
+        Log.e("noteList Size",noteList?.size.toString())
 
+
+    }
+    fun noteListIsNotEmpty():Boolean{
+        Log.e("size",noteList?.size.toString())
+        return noteList?.size !=0
     }
     class NoteViewHolder(itemView: View):ViewHolder(itemView)
 

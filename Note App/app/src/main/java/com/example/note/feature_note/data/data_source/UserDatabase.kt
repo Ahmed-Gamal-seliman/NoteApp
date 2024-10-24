@@ -4,28 +4,28 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.note.feature_note.data.model.Note
+import com.example.note.feature_note.data.model.User
 
 
 @Database(
-    entities = [Note::class],
+    entities = [User::class],
     version = 1
 )
-abstract class NoteDatabase: RoomDatabase() {
+abstract class UserDatabase: RoomDatabase() {
 
-    abstract fun noteDao():NoteDao
+    abstract fun userDao():UserDao
 
     companion object {
         @Volatile
-        var INSTANCE: NoteDatabase? = null
-        fun getDatabase(context: Context): NoteDatabase? {
+        var INSTANCE: UserDatabase? = null
+        fun getDatabase(context: Context): UserDatabase? {
             if (INSTANCE == null) {
-                synchronized(NoteDatabase::class)
+                synchronized(UserDatabase::class)
                 {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(
-                            context.applicationContext, NoteDatabase::class.java,
-                            "Note_db"
+                            context.applicationContext, UserDatabase::class.java,
+                            "User_db"
                         )
                             .allowMainThreadQueries()
                             .build()

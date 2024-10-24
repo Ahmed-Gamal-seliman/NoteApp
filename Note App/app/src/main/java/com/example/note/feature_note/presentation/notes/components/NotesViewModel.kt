@@ -43,10 +43,10 @@ class NotesViewModel(application:Application) :ViewModel() {
     {
 
         viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
+//            withContext(Dispatchers.IO) {
                  noteUseCase.deleteNote(note)
-            }
-            noteAdapter.deleteNote(position)
+//            }
+
         }
 
     }
