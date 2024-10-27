@@ -5,4 +5,6 @@ object Constants {
     val NOTE_KEY= "Note"
 
     val EDIT_KEY= "Edit"
+
+    val USER_KEY = "User"
 }

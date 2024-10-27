@@ -31,4 +31,10 @@ interface NoteDao {
     @Update
     suspend fun updateNote(note:Note)
 
+    @Query("SELECT * FROM Note WHERE userId= :userId")
+    fun getNotesByUserId(userId:Int?): Flow<List<Note>>
+
+
+
+
 }

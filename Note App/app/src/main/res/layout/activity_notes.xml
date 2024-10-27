@@ -12,14 +12,16 @@
 
     <TextView
         android:id="@+id/UserName_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="UserName Notes"
         android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/search_btn"
-        app:layout_constraintBottom_toBottomOf="@id/search_btn"/>
+        app:layout_constraintBottom_toBottomOf="@id/search_btn"
+        app:layout_constraintEnd_toStartOf="@id/search_btn"
+        />
 
     <ImageButton
         android:id="@+id/search_btn"
@@ -32,6 +34,7 @@
         app:layout_constraintEnd_toStartOf="@id/dots_btn"
         app:layout_constraintTop_toTopOf="@id/dots_btn" />
 
+
     <ImageButton
         android:id="@+id/dots_btn"
         android:layout_width="wrap_content"
@@ -39,7 +42,9 @@
         android:backgroundTint="@color/buttonBackground"
         android:src="@drawable/icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
 
     <ImageView
         android:id="@+id/home_note_img"

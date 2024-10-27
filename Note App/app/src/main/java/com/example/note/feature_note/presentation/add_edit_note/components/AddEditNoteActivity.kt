@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.note.R
 import com.example.note.databinding.ActivityAddEditNoteBinding
 import com.example.note.feature_note.data.model.Note
+import com.example.note.feature_note.presentation.AppViewModel
 import com.example.note.feature_note.presentation.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class AddEditNoteActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityAddEditNoteBinding
-    private lateinit var viewModel:AddEditNoteViewModel
+    private lateinit var viewModel:AppViewModel
 
 
 
@@ -40,8 +41,12 @@ class AddEditNoteActivity : AppCompatActivity() {
         binding = ActivityAddEditNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel= AddEditNoteViewModel(this.application)
+        viewModel= AppViewModel(this.application)
         viewModel.note= Note(title=null,content=null,color=null)
+
+
+
+
 
 
         setPostColors()
@@ -94,6 +99,7 @@ class AddEditNoteActivity : AppCompatActivity() {
 
     private fun changePostColor(color:Int) {
         binding.main.setBackgroundColor( ContextCompat.getColor(this, color))
+
       }
 
     private fun onSaveButtonClicked() {
@@ -114,7 +120,7 @@ class AddEditNoteActivity : AppCompatActivity() {
                 /* Save Note in Room Database through ViewModel*/
                 /* return back to the Note Activity and appear the note on the screen */
 
-
+                    viewModel.note?.userId = AppViewModel.user?.id
                     viewModel.note?.title = binding.TitleEt.text.toString()
                     viewModel.note?.content = binding.noteBodyEt.text.toString()
 

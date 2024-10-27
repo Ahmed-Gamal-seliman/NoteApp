@@ -22,51 +22,32 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/fullName_et"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/getStarted_img"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:background="@color/white"
-        app:boxCornerRadiusTopStart="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
-        app:boxCornerRadiusBottomEnd="15dp"
-        app:boxCornerRadiusBottomStart="15dp"
-        android:hint="@string/full_name"
-        >
-
-
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/enterYourEmail_et"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/fullName_et"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:background="@color/white"
-        app:boxCornerRadiusTopStart="15dp"
-        app:boxCornerRadiusTopEnd="15dp"
+        android:hint="@string/enter_your_email"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
-        android:hint="@string/enter_your_email"
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getStarted_img"
         android:layout_marginTop="15dp"
+
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_login_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
 
-            android:textColorHint="@color/white"
-            android:drawableEnd="@drawable/ic_mail"
             android:background="@color/white"
+            android:drawableEnd="@drawable/ic_mail"
+            android:textColorHint="@color/white"
 
             />
 
@@ -88,12 +69,14 @@
         app:boxCornerRadiusBottomStart="15dp"
         android:hint="@string/password"
         android:layout_marginTop="15dp"
+        app:passwordToggleEnabled="true"
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_login_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:inputType="textPassword"
 
             android:textColorHint="@color/white"
             android:drawableEnd="@drawable/ic_password_lock"
@@ -114,7 +97,7 @@
         />
 
     <Button
-        android:id="@+id/register_btn"
+        android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/enterPassword_et"
@@ -133,7 +116,7 @@
         android:text="@string/register"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/register_btn"
+        app:layout_constraintTop_toBottomOf="@id/login_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 

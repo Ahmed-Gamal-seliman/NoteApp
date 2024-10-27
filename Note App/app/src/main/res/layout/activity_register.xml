@@ -97,6 +97,7 @@
         app:boxCornerRadiusTopEnd="15dp"
         app:boxCornerRadiusBottomEnd="15dp"
         app:boxCornerRadiusBottomStart="15dp"
+        app:passwordToggleEnabled="true"
         android:hint="@string/strong_password"
         android:layout_marginTop="15dp"
         >
@@ -106,6 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
+            android:inputType="textPassword"
 
             android:textColorHint="@color/white"
             android:drawableEnd="@drawable/ic_password_lock"

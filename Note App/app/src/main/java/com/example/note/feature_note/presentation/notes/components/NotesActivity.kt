@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultCallback
@@ -18,10 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.note.R
 import com.example.note.databinding.ActivityNotesBinding
 import com.example.note.feature_note.data.model.Note
+import com.example.note.feature_note.data.model.User
+import com.example.note.feature_note.presentation.AppViewModel
 import com.example.note.feature_note.presentation.Constants
 import com.example.note.feature_note.presentation.NoteAdapter
 import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteActivity
-import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,7 +33,7 @@ import kotlinx.coroutines.withContext
 class NotesActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityNotesBinding
-    private lateinit var viewModel: NotesViewModel
+    private lateinit var viewModel: AppViewModel
 
     private val activityLauncher: ActivityResultLauncher<Intent> =
             registerForActivityResult(
@@ -41,7 +43,7 @@ class NotesActivity : AppCompatActivity() {
                     val intent = result.data
                     val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
                 runBlocking {
-                    viewModel.noteMainList= viewModel.getNotes()?.first()?.toMutableList()
+                    viewModel.noteMainList= viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
 
                     if(note!=null)
                         viewModel.noteAdapter.addNote(note)
@@ -64,7 +66,7 @@ class NotesActivity : AppCompatActivity() {
                 val intent = result.data
                 val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
                 runBlocking {
-                    viewModel.noteMainList= viewModel.getNotes()?.first()?.toMutableList()
+                    viewModel.noteMainList= viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
 
                     if(note!=null)
                         viewModel.noteAdapter.addNote(note)
@@ -86,14 +88,34 @@ class NotesActivity : AppCompatActivity() {
 
         initViewModel()
         intiNotesRecyclerView()
+
+        welcomeUser()
+        showAllNotesWhenUserLogin()
+
         checkIfNotesIsEmpty()
         onClickFloatingActionButton()
         onClickDeleteIcon()
 
         onCardItemClicked()
 
+        onThreeDotsClicked()
 
 
+
+
+    }
+
+    private fun showAllNotesWhenUserLogin() {
+
+    }
+
+    private fun welcomeUser() {
+        val user:User?=intent.getParcelableExtra<User>(Constants.USER_KEY)
+        binding.UserNameTv.text = "${user?.name} Notes" ?: "No name"
+        binding.userWelcomeTextView.text= "Hello ${user?.name}!\nCreate your first note!"
+    }
+
+    private fun onThreeDotsClicked() {
 
     }
 
@@ -120,11 +142,11 @@ class NotesActivity : AppCompatActivity() {
 
 
 
-                    if (realnote != null) {
-                        viewModel.deleteNote(realnote, position)
-                        viewModel.noteAdapter.deleteNote(position)
+                if (realnote != null) {
+                    viewModel.deleteNote(realnote, position)
+                    viewModel.noteAdapter.deleteNote(position)
 
-                    }
+                }
 
 
                 checkIfNotesIsEmpty()
@@ -165,7 +187,7 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = NotesViewModel(this.application)
+        viewModel = AppViewModel(this.application)
     }
 
     private fun onClickFloatingActionButton() {
@@ -174,4 +196,6 @@ class NotesActivity : AppCompatActivity() {
             activityLauncher.launch(intent)
         }
     }
+
+
 }

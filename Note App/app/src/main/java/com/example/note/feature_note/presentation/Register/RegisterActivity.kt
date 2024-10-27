@@ -37,7 +37,15 @@ class RegisterActivity : AppCompatActivity() {
         changeLogInColor()
 
         onRegisterButtonClicked()
+        onLoginClicked()
 
+    }
+
+    private fun onLoginClicked() {
+        binding.loginText.setOnClickListener{
+            navigateToLoginActivity()
+            finish()
+        }
     }
 
     private fun onRegisterButtonClicked() {
@@ -52,13 +60,9 @@ class RegisterActivity : AppCompatActivity() {
 
                 if(!isRegisteredUser(user))
                 {
-                    Log.e("user","not registered")
                     /* User is not registered before then add the user in database*/
                     user= User(name=null,email=null,password=null)
                     addUserData(user)
-                    Log.e("user name", user.name!!)
-                    Log.e("user email",user.email!!)
-                    Log.e("user password",user.password!!)
                     viewModel.insertUser(user)
 
                     navigateToLoginActivity()

@@ -18,5 +18,7 @@ interface NoteRepository {
     suspend fun updateNote(note:Note)
 
 
+     fun getNotesByUserId(userId:Int?):Flow<List<Note>>?
+
 
 }
