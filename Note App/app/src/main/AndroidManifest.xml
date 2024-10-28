@@ -13,30 +13,25 @@
         android:theme="@style/Theme.Note"
         tools:targetApi="31">
         <activity
-            android:name=".feature_note.presentation.Register.RegisterActivity"
+            android:name=".feature_note.presentation.Search.SearchActivity"
             android:exported="false" >
-
-
 
         </activity>
         <activity
+            android:name=".feature_note.presentation.Register.RegisterActivity"
+            android:exported="false"/>
+        <activity
             android:name=".feature_note.presentation.Login.LoginActivity"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
-
         </activity>
         <activity
             android:name=".feature_note.presentation.notes.components.NotesActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".feature_note.presentation.add_edit_note.components.AddEditNoteActivity"
             android:exported="false" />

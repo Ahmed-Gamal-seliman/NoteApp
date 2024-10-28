@@ -23,6 +23,7 @@ import com.example.note.feature_note.data.model.User
 import com.example.note.feature_note.presentation.AppViewModel
 import com.example.note.feature_note.presentation.Constants
 import com.example.note.feature_note.presentation.NoteAdapter
+import com.example.note.feature_note.presentation.Search.SearchActivity
 import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -100,8 +101,21 @@ class NotesActivity : AppCompatActivity() {
 
         onThreeDotsClicked()
 
+        onSearchIconClicked()
 
 
+
+
+    }
+
+    private fun onSearchIconClicked() {
+        binding.searchBtn.setOnClickListener {
+            val intent = Intent(this@NotesActivity, SearchActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun showSearchBar() {
 
     }
 
