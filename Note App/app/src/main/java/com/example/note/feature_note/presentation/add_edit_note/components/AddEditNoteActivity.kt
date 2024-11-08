@@ -169,6 +169,7 @@ class AddEditNoteActivity : AppCompatActivity() {
     }
 
     private fun changeCircleColor(imageButton:ImageButton,color: Int) {
+
         val wrappedDrawable= DrawableCompat.wrap(imageButton.drawable)
         DrawableCompat.setTint(
             wrappedDrawable,

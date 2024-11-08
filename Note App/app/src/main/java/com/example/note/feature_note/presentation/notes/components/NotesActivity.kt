@@ -36,6 +36,8 @@ class NotesActivity : AppCompatActivity() {
     lateinit var binding:ActivityNotesBinding
     private lateinit var viewModel: AppViewModel
 
+    private lateinit var noteAdapter:NoteAdapter
+
     private val activityLauncher: ActivityResultLauncher<Intent> =
             registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult(),
@@ -43,12 +45,30 @@ class NotesActivity : AppCompatActivity() {
 
                     val intent = result.data
                     val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
+                    viewModel.noteMainList?.clear()
                 runBlocking {
-                    viewModel.noteMainList= viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
+                    viewModel.noteMainList =
+                        viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
 
-                    if(note!=null)
-                        viewModel.noteAdapter.addNote(note)
+
                 }
+                    noteAdapter.clearAndAddNoteList(viewModel.noteMainList)
+                    viewModel.noteMainList?.forEach {
+                        note->
+                        Log.e("noteM",note.title ?: "No title")
+                    }
+                    Log.e("noteM",viewModel.noteMainList?.size.toString())
+                   // noteAdapter.notifyItemRangeChanged(0,viewModel.noteMainList?.size ?: 0)
+//                    if(note!=null) {
+//                        Log.e("noteAdapter",note.title!!)
+//                        noteAdapter.addNote(note)
+//                        viewModel.noteMainList?.forEach {
+//                            note->
+//                            Log.e("note title",note.title ?: "no title")
+//
+//                        }
+//
+//                    }
 
                     checkIfNotesIsEmpty()
 
@@ -59,27 +79,6 @@ class NotesActivity : AppCompatActivity() {
             )
 
 
-    private val editActivityLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            ActivityResultCallback {result->
-
-                val intent = result.data
-                val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
-                runBlocking {
-                    viewModel.noteMainList= viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
-
-                    if(note!=null)
-                        viewModel.noteAdapter.addNote(note)
-                }
-
-                checkIfNotesIsEmpty()
-
-
-
-
-            }
-        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +87,7 @@ class NotesActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViewModel()
+        initNoteAdapter()
         intiNotesRecyclerView()
 
         welcomeUser()
@@ -106,6 +106,10 @@ class NotesActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private fun initNoteAdapter() {
+        noteAdapter= NoteAdapter(viewModel.noteMainList)
     }
 
     private fun onSearchIconClicked() {
@@ -134,33 +138,51 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun onCardItemClicked() {
-        viewModel.noteAdapter.onCardClick = object:NoteAdapter.CardClickListener{
-            override fun onItemClicked(note:Note?) {
-                val intent= Intent(this@NotesActivity,AddEditNoteActivity::class.java)
-                intent.putExtra(Constants.NOTE_KEY,note)
-                startActivity(intent)
-
-
-
-            }
-        }
+//        viewModel.noteAdapter.onCardClick = object:NoteAdapter.CardClickListener{
+//            override fun onItemClicked(note:Note?) {
+//                val intent= Intent(this@NotesActivity,AddEditNoteActivity::class.java)
+//                intent.putExtra(Constants.NOTE_KEY,note)
+//                startActivity(intent)
+//
+//
+//
+//            }
+//        }
     }
 
     private fun onClickDeleteIcon() {
-        viewModel.noteAdapter.onClickIconDelete= object :NoteAdapter.IconDeleteListener{
+        noteAdapter.onClickIconDelete= object :NoteAdapter.IconDeleteListener{
 
             override fun onIconDeleteClicked(note:Note?, position:Int) {
                 /* Remove from Note List and from Room Database*/
-              val realnote = viewModel.getNote(title=note?.title!!, content = note.content!! ,color = note.color!!)
+                var realnote:Note?=null
+                runBlocking {
+                    realnote = viewModel.getNote(
+                        title = note?.title!!,
+                        content = note.content!!,
+                        color = note.color!!
+                    )
+                }
 
-
-
-
-                if (realnote != null) {
-                    viewModel.deleteNote(realnote, position)
-                    viewModel.noteAdapter.deleteNote(position)
+            if (realnote != null) {
+                runBlocking {
+                    viewModel.deleteNote(realnote!!, position)
+                }
+                //noteAdapter.deleteNote(position)
+                viewModel.noteMainList?.clear()
+                runBlocking {
+                    viewModel.noteMainList =
+                        viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
 
                 }
+                Log.e("indelete",viewModel.noteMainList?.size.toString())
+                noteAdapter.clearAndAddNoteList(viewModel.noteMainList)
+                viewModel.noteMainList?.forEach {
+                    note->
+                    Log.e("notedel : ViewModel",note.title ?: "No title")
+                }
+
+            }
 
 
                 checkIfNotesIsEmpty()
@@ -174,7 +196,7 @@ class NotesActivity : AppCompatActivity() {
 
     private fun checkIfNotesIsEmpty() {
         /* Check there is a list or not */
-        if (viewModel.noteAdapter.noteListIsNotEmpty()) {
+        if (noteAdapter.noteListIsNotEmpty()) {
             showNoteRecyclerView()
             Log.e("show","note recycler")
         } else {
@@ -196,7 +218,7 @@ class NotesActivity : AppCompatActivity() {
     }
 
     private fun intiNotesRecyclerView() {
-        binding.rvNotes.adapter = viewModel.noteAdapter
+        binding.rvNotes.adapter = noteAdapter
         binding.rvNotes.layoutManager= LinearLayoutManager(this)
     }
 

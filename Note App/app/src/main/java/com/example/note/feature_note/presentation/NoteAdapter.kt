@@ -30,17 +30,21 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-
-        binding.noteTitle.text= noteList?.get(position)?.title.toString()
-        binding.cardItem.setBackgroundColor( ContextCompat.getColor(binding.root.context,
-            noteList?.get(position)?.color ?: R.color.Green
+        Log.e("titleBind",noteList?.get(holder.adapterPosition)?.title.toString())
+        binding.noteTitle.text= noteList?.get(holder.adapterPosition)?.title.toString()
+        binding.cardItem.setCardBackgroundColor(ContextCompat.getColor(binding.root.context,
+            noteList?.get(holder.adapterPosition)?.color ?: R.color.Green
         ))
+//        binding.cardItem.setBackgroundColor( ContextCompat.getColor(binding.root.context,
+//            noteList?.get(position)?.color ?: R.color.Green
+//        ))
 
 
 
 
         binding.icDelete.setOnClickListener()
         {
+            Log.e("position",holder.adapterPosition.toString())
             onClickIconDelete?.onIconDeleteClicked(noteList?.get(holder.adapterPosition),holder.adapterPosition)
         }
 
@@ -50,12 +54,28 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
 //        }
     }
 
-    override fun getItemCount():Int = noteList?.size ?: 0
+    override fun getItemCount():Int {
+        Log.e("size",noteList?.size.toString())
+        return noteList?.size ?: 0
+    }
 
 
+    fun clearAndAddNoteList(notes:MutableList<Note>?)
+    {
+        noteList?.clear()
+        notes?.forEach { note->
+            noteList?.add(note)
+            Log.e("notedel : adapter",note.title ?: "No title")
+        }
+        notifyDataSetChanged()
+
+    }
     fun addNote(note:Note){
        noteList?.add(note)
         notifyItemInserted(noteList?.size!!)
+        noteList?.forEach { note->
+            Log.e("note item",note.title ?: "no title")
+        }
     }
 
     fun deleteNote(position:Int)

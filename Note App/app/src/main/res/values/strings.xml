@@ -11,4 +11,6 @@
     <string name="remeber_me">Remeber me</string>
     <string name="login">Login</string>
     <string name="log_out">log out</string>
+    <string name="list_is_empty">List is Empty</string>
+    <string name="email_or_password_is_wrong">Email or password is Wrong</string>
 </resources>

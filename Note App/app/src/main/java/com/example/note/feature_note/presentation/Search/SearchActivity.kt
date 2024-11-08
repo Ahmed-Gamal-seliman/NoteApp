@@ -92,6 +92,6 @@ private lateinit var viewModel: AppViewModel
     }
 
     private fun showListisEmpty() {
-        binding.errorEmptyListTv.text="List is Empty"
+        binding.errorEmptyListTv.text= getString(R.string.list_is_empty)
     }
 }

@@ -24,7 +24,7 @@ class AppViewModel(application: Application):ViewModel() {
 
     var note: Note? = null
 
-    var noteAdapter:NoteAdapter
+
     var noteMainList: MutableList<Note>? = null
 
     init {
@@ -32,7 +32,7 @@ class AppViewModel(application: Application):ViewModel() {
             noteMainList =getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
         }
 
-        noteAdapter = NoteAdapter(noteMainList)
+//        noteAdapter = NoteAdapter(noteMainList)
     }
     fun addNote(note: Note){
         viewModelScope.launch(Dispatchers.IO) {
@@ -70,12 +70,14 @@ class AppViewModel(application: Application):ViewModel() {
     fun deleteNote(note:Note,position:Int)
     {
 
-        viewModelScope.launch(Dispatchers.Main) {
+//        viewModelScope.launch(Dispatchers.Main) {
 //            withContext(Dispatchers.IO) {
+        runBlocking {
             appUseCase.deleteNote(note)
+        }
 //            }
 
-        }
+//        }
 
     }
 

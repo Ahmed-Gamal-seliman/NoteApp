@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="list_is_empty">List is Empty</string>
+    <string name="email_or_password_is_wrong">Email or password is Wrong</string>
+</resources>
