@@ -1,20 +1,20 @@
 package com.example.note.feature_note.presentation
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.note.R
 import com.example.note.databinding.NoteItemBinding
 import com.example.note.feature_note.data.model.Note
 
-class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter( private var noteList:MutableList<Note>?):Adapter<NoteAdapter.NoteViewHolder>() {
    private lateinit var binding: NoteItemBinding
 
     var onClickIconDelete:IconDeleteListener?=null
@@ -23,6 +23,23 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
 
 
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun setList(notes: List<Note>)
+    {
+        Log.e("notes size",notes.size.toString())
+        if(noteList == null)
+            Log.e("noteList","null")
+        else{
+            Log.e("noteList","not null")
+            noteList?.clear()
+            noteList?.addAll(notes)
+            Log.e("noteList",noteList.toString())
+        }
+
+
+        notifyDataSetChanged()
+        Log.e("noteList in setList",noteList?.size.toString())
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         binding = NoteItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -44,7 +61,7 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
 
         binding.icDelete.setOnClickListener()
         {
-            Log.e("position",holder.adapterPosition.toString())
+            Log.e("note in bind",holder.adapterPosition.toString())
             onClickIconDelete?.onIconDeleteClicked(noteList?.get(holder.adapterPosition),holder.adapterPosition)
         }
 
@@ -53,6 +70,9 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
 //            onCardClick?.onItemClicked(noteList?.get(holder.adapterPosition))
 //        }
     }
+
+
+   
 
     override fun getItemCount():Int {
         Log.e("size",noteList?.size.toString())
@@ -63,9 +83,12 @@ class NoteAdapter( private val noteList:MutableList<Note>?):Adapter<NoteAdapter.
     fun clearAndAddNoteList(notes:MutableList<Note>?)
     {
         noteList?.clear()
-        notes?.forEach { note->
-            noteList?.add(note)
+        notes?.forEachIndexed { index,note->
+            noteList?.add(index,note)
             Log.e("notedel : adapter",note.title ?: "No title")
+        }
+        noteList?.forEachIndexed { index, note->
+            Log.e("note in func","${note.title}: ${index}")
         }
         notifyDataSetChanged()
 

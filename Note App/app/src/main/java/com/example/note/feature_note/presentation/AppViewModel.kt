@@ -1,6 +1,9 @@
 package com.example.note.feature_note.presentation
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.note.feature_note.data.model.Note
@@ -11,6 +14,9 @@ import com.example.note.feature_note.domain.use_case.NoteUseCase
 import com.example.note.feature_note.domain.use_case.UserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -20,25 +26,32 @@ class AppViewModel(application: Application):ViewModel() {
 
     companion object {
          var user: User? = null
+
     }
 
     var note: Note? = null
 
+    private var _noteMainList:MutableStateFlow<List<Note>>? = MutableStateFlow<List<Note>>(emptyList())
+    var noteMainList:  MutableStateFlow<List<Note>>? = _noteMainList
 
-    var noteMainList: MutableList<Note>? = null
 
     init {
-        runBlocking {
-            noteMainList =getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
-        }
+        refreshData()
+    }
 
-//        noteAdapter = NoteAdapter(noteMainList)
+    fun refreshData(){
+            viewModelScope.launch(Dispatchers.IO) {
+                Log.e("viewModel","yes")
+                _noteMainList?.emit(getNotesByUserId(AppViewModel.user?.id)?.first() ?: emptyList())
+
+
+
+
+            }
+//        Log.e("mainList",_noteMainList.value.toString())
+
     }
-    fun addNote(note: Note){
-        viewModelScope.launch(Dispatchers.IO) {
-            appUseCase.insertNote(note)
-        }
-    }
+
     fun getUser(email:String,password:String): User?
     {
         runBlocking {
@@ -47,7 +60,11 @@ class AppViewModel(application: Application):ViewModel() {
         return user
     }
 
-
+    fun addNote(note: Note){
+        runBlocking {
+            appUseCase.insertNote(note)
+        }
+    }
 
     fun insertUser(user:User)
     {
@@ -62,12 +79,12 @@ class AppViewModel(application: Application):ViewModel() {
 
     }
 
-    fun getNotesByUserId(id:Int?): Flow<List<Note>>? {
+     fun getNotesByUserId(id:Int?): Flow<List<Note>>? {
         return appUseCase.getNotesByUserId(id)
     }
 
 
-    fun deleteNote(note:Note,position:Int)
+    fun deleteNote(note:Note)
     {
 
 //        viewModelScope.launch(Dispatchers.Main) {

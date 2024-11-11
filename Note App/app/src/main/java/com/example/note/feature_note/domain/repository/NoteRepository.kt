@@ -1,5 +1,6 @@
 package com.example.note.feature_note.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.example.note.feature_note.data.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +19,7 @@ interface NoteRepository {
     suspend fun updateNote(note:Note)
 
 
-     fun getNotesByUserId(userId:Int?):Flow<List<Note>>?
+    fun getNotesByUserId(userId:Int?):Flow<List<Note>>?
 
 
 }

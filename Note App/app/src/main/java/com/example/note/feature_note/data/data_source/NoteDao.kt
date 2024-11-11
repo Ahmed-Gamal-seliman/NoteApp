@@ -1,5 +1,6 @@
 package com.example.note.feature_note.data.data_source
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -19,7 +20,7 @@ interface NoteDao {
     @Query("SELECT * FROM note where id=:id")
     suspend fun getNoteById(id:Int): Note?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertNote(note: Note)
 
     @Delete

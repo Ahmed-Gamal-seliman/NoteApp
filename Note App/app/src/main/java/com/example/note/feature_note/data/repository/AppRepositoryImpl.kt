@@ -1,6 +1,7 @@
 package com.example.note.feature_note.data.repository
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import com.example.note.feature_note.data.data_source.AppDatabase
 import com.example.note.feature_note.data.model.Note
 import com.example.note.feature_note.data.model.User

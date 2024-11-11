@@ -29,7 +29,7 @@ class AddEditNoteActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityAddEditNoteBinding
-    private lateinit var viewModel:AppViewModel
+    private val note:Note = Note()
 
 
 
@@ -41,8 +41,6 @@ class AddEditNoteActivity : AppCompatActivity() {
         binding = ActivityAddEditNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel= AppViewModel(this.application)
-        viewModel.note= Note(title=null,content=null,color=null)
 
 
 
@@ -80,20 +78,20 @@ class AddEditNoteActivity : AppCompatActivity() {
     private fun onCircleColorsClicked() {
         binding.yellowCircle.setOnClickListener{
             changePostColor(R.color.Yellow)
-            viewModel.note?.color=R.color.Yellow
+            note.color=R.color.Yellow
         }
 
         binding.babyBlueCircle.setOnClickListener{
             changePostColor(R.color.BabyBlue)
-            viewModel.note?.color=R.color.BabyBlue
+            note.color=R.color.BabyBlue
         }
         binding.redPinkCircle.setOnClickListener{
             changePostColor(R.color.RedPink)
-            viewModel.note?.color=R.color.RedPink
+            note.color=R.color.RedPink
         }
         binding.greenCircle.setOnClickListener{
             changePostColor(R.color.Green)
-            viewModel.note?.color=R.color.Green
+            note.color=R.color.Green
         }
     }
 
@@ -119,21 +117,23 @@ class AddEditNoteActivity : AppCompatActivity() {
             {
                 /* Save Note in Room Database through ViewModel*/
                 /* return back to the Note Activity and appear the note on the screen */
+                Log.e("in add note","yes")
+                    note.userId = AppViewModel.user?.id
+                    note.title = binding.TitleEt.text.toString()
+                    note.content = binding.noteBodyEt.text.toString()
 
-                    viewModel.note?.userId = AppViewModel.user?.id
-                    viewModel.note?.title = binding.TitleEt.text.toString()
-                    viewModel.note?.content = binding.noteBodyEt.text.toString()
-
-                    if(viewModel.note?.color == null)
+                Log.e("in add note title",note.title.toString())
+                    if(note.color == null)
                     {
-                        viewModel.note?.color = R.color.BabyBlue
+                        note.color = R.color.BabyBlue
                     }
 
 
-                    viewModel.addNote(viewModel.note!!)
+//                    viewModel.addNote(note)
+
 
                     val intent = Intent()
-                    intent.putExtra(Constants.NOTE_KEY, viewModel.note!!)
+                    intent.putExtra(Constants.NOTE_KEY,note)
                     setResult(RESULT_OK, intent)
                     finish()
 

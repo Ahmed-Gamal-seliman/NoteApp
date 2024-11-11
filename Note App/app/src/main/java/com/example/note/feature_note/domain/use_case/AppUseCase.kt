@@ -1,5 +1,6 @@
 package com.example.note.feature_note.domain.use_case
 
+import androidx.lifecycle.LiveData
 import com.example.note.feature_note.data.model.Note
 import com.example.note.feature_note.data.model.User
 import com.example.note.feature_note.domain.repository.AppRepository
@@ -34,7 +35,7 @@ class AppUseCase(
         appRepository.updateNote(note)
     }
 
-     fun getNotesByUserId(userId: Int?): Flow<List<Note>>? {
+       fun getNotesByUserId(userId: Int?): Flow<List<Note>>? {
         return appRepository.getNotesByUserId(userId)
     }
 

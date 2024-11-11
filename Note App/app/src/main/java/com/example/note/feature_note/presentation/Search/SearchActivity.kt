@@ -31,7 +31,7 @@ private lateinit var viewModel: AppViewModel
         viewModel = AppViewModel(this.application)
         
 
-        showNotesForUser(viewModel.noteMainList)
+        showNotesForUser(viewModel.noteMainList?.value?.toMutableList())
         onSearchIconClicked()
 
 
@@ -56,7 +56,7 @@ private lateinit var viewModel: AppViewModel
             override fun onQueryTextChange(newText: String?): Boolean {
                 if(newText?.isEmpty() == true)
                 {
-                    showNotesForUser(viewModel.noteMainList)
+                    showNotesForUser(viewModel.noteMainList?.value?.toMutableList())
                     return false
                 }
                 val filteredList = filterNotesList(newText)
@@ -70,7 +70,7 @@ private lateinit var viewModel: AppViewModel
 
     private fun filterNotesList(newText:String?):MutableList<Note>? {
         val filteredList = mutableListOf<Note>()
-        viewModel.noteMainList?.forEach {note->
+        viewModel.noteMainList?.value?.forEach {note->
             if(note.title?.contains(newText.toString()) == true)
             {
                 filteredList.add(note)
@@ -83,7 +83,7 @@ private lateinit var viewModel: AppViewModel
     private fun showNotesForUser(notes:MutableList<Note>?) {
         binding.rvSearchList.apply{
             adapter = NoteAdapter(notes)
-            if(viewModel.noteMainList?.isEmpty() == true)
+            if(viewModel.noteMainList?.value?.isEmpty() == true)
             {
                 showListisEmpty()
             }

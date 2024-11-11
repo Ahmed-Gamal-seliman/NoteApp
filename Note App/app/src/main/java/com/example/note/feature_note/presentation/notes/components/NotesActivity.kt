@@ -1,22 +1,18 @@
 package com.example.note.feature_note.presentation.notes.components
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.widget.LinearLayout
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.note.R
 import com.example.note.databinding.ActivityNotesBinding
 import com.example.note.feature_note.data.model.Note
 import com.example.note.feature_note.data.model.User
@@ -26,7 +22,6 @@ import com.example.note.feature_note.presentation.NoteAdapter
 import com.example.note.feature_note.presentation.Search.SearchActivity
 import com.example.note.feature_note.presentation.add_edit_note.components.AddEditNoteActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -38,39 +33,27 @@ class NotesActivity : AppCompatActivity() {
 
     private lateinit var noteAdapter:NoteAdapter
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val activityLauncher: ActivityResultLauncher<Intent> =
             registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult(),
                 ActivityResultCallback {result->
 
-                    val intent = result.data
-                    val note = intent?.getParcelableExtra<Note>(Constants.NOTE_KEY)
-                    viewModel.noteMainList?.clear()
-                runBlocking {
-                    viewModel.noteMainList =
-                        viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
+                val note= result.data?.getParcelableExtra(Constants.NOTE_KEY,Note::class.java)
 
+                    runBlocking {
+                        if (note != null)
+                            viewModel.addNote(note)
 
-                }
-                    noteAdapter.clearAndAddNoteList(viewModel.noteMainList)
-                    viewModel.noteMainList?.forEach {
-                        note->
-                        Log.e("noteM",note.title ?: "No title")
+                        Log.e("activity", "ok")
+                        viewModel.refreshData()
                     }
-                    Log.e("noteM",viewModel.noteMainList?.size.toString())
-                   // noteAdapter.notifyItemRangeChanged(0,viewModel.noteMainList?.size ?: 0)
-//                    if(note!=null) {
-//                        Log.e("noteAdapter",note.title!!)
-//                        noteAdapter.addNote(note)
-//                        viewModel.noteMainList?.forEach {
-//                            note->
-//                            Log.e("note title",note.title ?: "no title")
-//
-//                        }
-//
-//                    }
 
-                    checkIfNotesIsEmpty()
+
+
+
+
+//                    checkIfNotesIsEmpty()
 
 
 
@@ -87,7 +70,11 @@ class NotesActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViewModel()
+
+
         initNoteAdapter()
+
+
         intiNotesRecyclerView()
 
         welcomeUser()
@@ -103,13 +90,48 @@ class NotesActivity : AppCompatActivity() {
 
         onSearchIconClicked()
 
-
+        checkIfNotesIsEmpty()
 
 
     }
 
     private fun initNoteAdapter() {
-        noteAdapter= NoteAdapter(viewModel.noteMainList)
+        noteAdapter= NoteAdapter(emptyList<Note>().toMutableList())
+   lifecycleScope.launch(Dispatchers.IO) {
+
+       val list:MutableList<Note> = mutableListOf()
+        viewModel.noteMainList?.collect()
+        {
+            list.clear()
+            list.addAll(it)
+            Log.e("in collect",it.toString())
+            withContext(Dispatchers.Main)
+            {
+                Log.e("context collect","yes")
+                noteAdapter.setList(list)
+                checkIfNotesIsEmpty()
+            }
+        }
+
+
+    }
+
+//        viewModel.noteMainList.observe(this)
+//        {
+////            Log.e("notes",it.toString())
+//            Toast.makeText(this@NotesActivity,"here",Toast.LENGTH_LONG).show()
+//            Log.e("list",it?.toString() ?: "No items")
+//            if(it?.size != 0) {
+////                Log.e("it size",it.size.toString())
+//                noteAdapter.setList(it?.toList() ?: emptyList<Note>())
+//            }
+//            else{
+//                Log.e("it size","0")
+//            }
+//            checkIfNotesIsEmpty()
+//        }
+
+
     }
 
     private fun onSearchIconClicked() {
@@ -154,42 +176,51 @@ class NotesActivity : AppCompatActivity() {
         noteAdapter.onClickIconDelete= object :NoteAdapter.IconDeleteListener{
 
             override fun onIconDeleteClicked(note:Note?, position:Int) {
-                /* Remove from Note List and from Room Database*/
-                var realnote:Note?=null
-                runBlocking {
-                    realnote = viewModel.getNote(
-                        title = note?.title!!,
-                        content = note.content!!,
-                        color = note.color!!
-                    )
-                }
 
-            if (realnote != null) {
-                runBlocking {
-                    viewModel.deleteNote(realnote!!, position)
-                }
+
+                /* Delete from database*/
+                viewModel.deleteNote(note!!)
+
                 //noteAdapter.deleteNote(position)
-                viewModel.noteMainList?.clear()
-                runBlocking {
-                    viewModel.noteMainList =
-                        viewModel.getNotesByUserId(AppViewModel.user?.id)?.first()?.toMutableList()
+                noteAdapter.notifyItemRemoved(position)
 
-                }
-                Log.e("indelete",viewModel.noteMainList?.size.toString())
-                noteAdapter.clearAndAddNoteList(viewModel.noteMainList)
-                viewModel.noteMainList?.forEach {
-                    note->
-                    Log.e("notedel : ViewModel",note.title ?: "No title")
-                }
+                viewModel.refreshData()
+
+                /* Empty the list */
+//                viewModel.noteMainList= emptyList<Note>().toMutableList()
+//                noteAdapter.noteList =  viewModel.noteMainList
+                /* get all notes for the user after deletion*/
+//                runBlocking {
+//
+//                        noteAdapter.setList(viewModel.getNotesByUserId(AppViewModel.user?.id)?.first() ?: emptyList())
+//
+//
+//                }
+
+//                if( viewModel.noteMainList?.size != 0)
+//                    viewModel.noteMainList?.forEach {
+//                            note->
+//                        Log.e("note in delete after",note.title ?: "No title")
+//                    }
+//                else
+//                    Log.e("note in delete after","size is zero")
+
+//                noteAdapter.noteList?.addAll(viewModel.noteMainList!!)
+//                Log.e("noteList",noteAdapter.noteList.toString())
+
+//                noteAdapter.clearAndAddNoteList(viewModel.noteMainList)
+//                    noteAdapter.notifyItemRemoved(position)
+
+//                checkIfNotesIsEmpty()
 
             }
 
 
-                checkIfNotesIsEmpty()
 
 
-            }
+
         }
+
 
 
     }
